@@ -1,0 +1,135 @@
+[
+  {
+    "id": 1,
+    "name": "د. أحمد محمد علي",
+    "category": "طب القلب",
+    "categories": ["طب القلب", "الأمراض الباطنية"],
+    "image": "https://images.pexels.com/photos/5407249/pexels-photo-5407249.jpeg",
+    "experience": "15 سنة",
+    "years": 15,
+    "specialization": "أخصائي أمراض القلب والشرايين",
+    "description": "خبير في تشخيص وعلاج أمراض القلب والشرايين مع أكثر من 15 عاماً من الخبرة"
+  },
+  {
+    "id": 2,
+    "name": "د. فاطمة حسن إبراهيم",
+    "category": "طب الأطفال",
+    "categories": ["طب الأطفال", "الرعاية الصحية للأطفال"],
+    "image": "https://images.pexels.com/photos/7653132/pexels-photo-7653132.jpeg",
+    "experience": "12 سنة",
+    "years": 12,
+    "specialization": "أخصائية طب الأطفال",
+    "description": "متخصصة في رعاية الأطفال من الولادة حتى المراهقة مع خبرة واسعة في الأمراض الشائعة"
+  },
+  {
+    "id": 3,
+    "name": "د. محمد خالد السعيد",
+    "category": "الجراحة العامة",
+    "categories": ["الجراحة العامة", "الجراحة التنظيرية"],
+    "image": "https://images.pexels.com/photos/7108317/pexels-photo-7108317.jpeg",
+    "experience": "20 سنة",
+    "years": 20,
+    "specialization": "جراح عام",
+    "description": "جراح خبير في الجراحة العامة والتنظيرية مع أكثر من 20 عاماً من الخبرة"
+  },
+  {
+    "id": 4,
+    "name": "د. سارة محمود عبدالله",
+    "category": "طب النساء والتوليد",
+    "categories": ["طب النساء والتوليد", "الرعاية الصحية للمرأة"],
+    "image": "https://images.pexels.com/photos/5407249/pexels-photo-5407249.jpeg",
+    "experience": "10 سنة",
+    "years": 10,
+    "specialization": "أخصائية نساء وتوليد",
+    "description": "متخصصة في رعاية صحة المرأة والحمل والولادة مع خبرة في المتابعة الشاملة"
+  },
+  {
+    "id": 5,
+    "name": "د. يوسف أحمد فتحي",
+    "category": "طب العظام",
+    "categories": ["طب العظام", "جراحة العظام"],
+    "image": "https://images.pexels.com/photos/7108317/pexels-photo-7108317.jpeg",
+    "experience": "18 سنة",
+    "years": 18,
+    "specialization": "أخصائي جراحة العظام",
+    "description": "خبير في علاج إصابات العظام والمفاصل والعمود الفقري"
+  },
+  {
+    "id": 6,
+    "name": "د. نورا سعد الدين",
+    "category": "طب الجلدية",
+    "categories": ["طب الجلدية", "التجميل"],
+    "image": "https://images.pexels.com/photos/7653132/pexels-photo-7653132.jpeg",
+    "experience": "8 سنة",
+    "years": 8,
+    "specialization": "أخصائية أمراض جلدية وتجميل",
+    "description": "متخصصة في علاج الأمراض الجلدية والعلاجات التجميلية المتقدمة"
+  },
+  {
+    "id": 7,
+    "name": "د. خالد مصطفى رضا",
+    "category": "طب العيون",
+    "categories": ["طب العيون", "جراحة العيون"],
+    "image": "https://images.pexels.com/photos/5407249/pexels-photo-5407249.jpeg",
+    "experience": "14 سنة",
+    "years": 14,
+    "specialization": "أخصائي طب وجراحة العيون",
+    "description": "خبير في تشخيص وعلاج أمراض العيون وجراحات الليزر"
+  },
+  {
+    "id": 8,
+    "name": "د. ليلى عبدالرحمن",
+    "category": "طب الأعصاب",
+    "categories": ["طب الأعصاب", "الطب النفسي"],
+    "image": "https://images.pexels.com/photos/7653132/pexels-photo-7653132.jpeg",
+    "experience": "16 سنة",
+    "years": 16,
+    "specialization": "أخصائية أمراض عصبية",
+    "description": "متخصصة في تشخيص وعلاج أمراض الجهاز العصبي والصداع"
+  },
+  {
+    "id": 9,
+    "name": "د. عمر حسن محمود",
+    "category": "طب الأسنان",
+    "categories": ["طب الأسنان", "جراحة الفم"],
+    "image": "https://images.pexels.com/photos/7108317/pexels-photo-7108317.jpeg",
+    "experience": "11 سنة",
+    "years": 11,
+    "specialization": "أخصائي جراحة الفم والأسنان",
+    "description": "خبير في علاجات الأسنان التجميلية والجراحية"
+  },
+  {
+    "id": 10,
+    "name": "د. مريم علي أحمد",
+    "category": "الطب النفسي",
+    "categories": ["الطب النفسي", "العلاج النفسي"],
+    "image": "https://images.pexels.com/photos/5407249/pexels-photo-5407249.jpeg",
+    "experience": "13 سنة",
+    "years": 13,
+    "specialization": "أخصائية طب نفسي",
+    "description": "متخصصة في العلاج النفسي والاستشارات النفسية للأفراد والأسر"
+  },
+  {
+    "id": 11,
+    "name": "د. طارق إبراهيم سالم",
+    "category": "طب القلب",
+    "categories": ["طب القلب", "قسطرة القلب"],
+    "image": "https://images.pexels.com/photos/7108317/pexels-photo-7108317.jpeg",
+    "experience": "17 سنة",
+    "years": 17,
+    "specialization": "أخصائي قسطرة القلب",
+    "description": "خبير في قسطرة القلب التداخلية وعلاج أمراض الشرايين التاجية"
+  },
+  {
+    "id": 12,
+    "name": "د. هناء محمد كمال",
+    "category": "طب الأطفال",
+    "categories": ["طب الأطفال", "حديثي الولادة"],
+    "image": "https://images.pexels.com/photos/7653132/pexels-photo-7653132.jpeg",
+    "experience": "9 سنة",
+    "years": 9,
+    "specialization": "أخصائية حديثي الولادة",
+    "description": "متخصصة في رعاية الأطفال حديثي الولادة والرعاية المركزة"
+  }
+]
+
