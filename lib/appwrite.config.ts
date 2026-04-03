@@ -24,12 +24,14 @@ const serverClient = new ServerClient()
   .setEndpoint(ENDPOINT_URL)
   .setProject(PROJECT_ID);
 
-// Only set API key if it exists
-const apiKey = process.env.API_KEY || process.env.APPWRITE_API_KEY || process.env.NEXT_PUBLIC_API_KEY;
-if (apiKey) {
-  serverClient.setKey(apiKey);
+// Server-only key — never use NEXT_PUBLIC_* for Users / admin APIs (CORS + security).
+const serverApiKey = process.env.API_KEY || process.env.APPWRITE_API_KEY;
+if (serverApiKey) {
+  serverClient.setKey(serverApiKey);
 } else {
-  console.warn("API_KEY, APPWRITE_API_KEY, or NEXT_PUBLIC_API_KEY is not set. Server-side operations may fail.");
+  console.warn(
+    "API_KEY or APPWRITE_API_KEY is not set. Server actions that use Appwrite admin APIs will fail."
+  );
 }
 
 export const serverUsers = new Users(serverClient);

@@ -1,3 +1,5 @@
+"use server";
+
 import { serverDatabases, serverUsers } from "@/lib/appwrite.config";
 import { ID, Query } from "node-appwrite";
 import { APPOINTMENTS_TABLE_ID, DATABASE_ID, PATIENTS_TABLE_ID } from "@/lib/appwrite.config";

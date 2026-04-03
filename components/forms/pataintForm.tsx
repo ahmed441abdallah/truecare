@@ -33,15 +33,17 @@ export default function PataintForm() {
     setIsLoading(true);
     try {
       const userData = { name, email, phone };
-      const user = await createUser(userData);
-      if (user) router.push(`/patients/${user.$id}/register`);
-    } catch (error: any) {
-      if (error?.code === "USER_EXISTS") {
+      const outcome = await createUser(userData);
+      if (outcome.status === "created") {
+        router.push(`/patients/${outcome.user.$id}/register`);
+      } else if (outcome.status === "exists") {
         toast.error("المستخدم موجود بالفعل بهذا العنوان الإلكتروني");
       } else {
         toast.error("فشل إنشاء المستخدم. يرجى المحاولة مرة أخرى.");
-        console.error(error);
       }
+    } catch (error: unknown) {
+      toast.error("فشل إنشاء المستخدم. يرجى المحاولة مرة أخرى.");
+      console.error(error);
     } finally {
       setIsLoading(false);
     }

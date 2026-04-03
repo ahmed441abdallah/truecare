@@ -1,43 +1,46 @@
+"use server";
+
 import { serverUsers, serverDatabases } from "@/lib/appwrite.config";
 import { ID } from "node-appwrite";
 import { PATIENTS_TABLE_ID, DATABASE_ID } from "@/lib/appwrite.config";
 import { parseStringify } from "../utils";
 import { Query } from "node-appwrite";
 
-// CREATE APPWRITE USER
-export const createUser = async (user: CreateUserParams) => {
+export type CreateUserOutcome =
+  | { status: "created"; user: User }
+  | { status: "exists" }
+  | { status: "failed" };
+
+// CREATE APPWRITE USER (server-only — never call Users API from the browser)
+export async function createUser(
+  user: CreateUserParams
+): Promise<CreateUserOutcome> {
   try {
-    const apiKey = process.env.API_KEY || process.env.APPWRITE_API_KEY || process.env.NEXT_PUBLIC_API_KEY;
+    const apiKey = process.env.API_KEY || process.env.APPWRITE_API_KEY;
     if (!apiKey) {
-      throw new Error("API_KEY is not configured. Cannot create user.");
+      console.error("API_KEY / APPWRITE_API_KEY is not configured on the server.");
+      return { status: "failed" };
     }
 
-    // Check if user already exists by email
     try {
       const existingUsers = await serverUsers.list([
         Query.equal("email", [user.email]),
       ]);
-      
+
       if (existingUsers.users.length > 0) {
-        const error = new Error("User already exists");
-        (error as any).code = "USER_EXISTS";
-        (error as any).user = parseStringify(existingUsers.users[0]);
-        throw error;
+        return { status: "exists" };
       }
-    } catch (listError: any) {
-      // If it's our custom USER_EXISTS error, re-throw it
-      if (listError?.code === "USER_EXISTS") {
-        throw listError;
-      }
-      // If listing fails for other reasons, continue to create
+    } catch (listError: unknown) {
+      // If listing fails, still attempt create (same as previous behavior)
+      console.error("Error listing users by email:", listError);
     }
 
-    // Generate a secure random password (user can reset it later)
-    // Password must be 8-265 chars and not commonly used
-    const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*";
-    const randomPassword = Array.from({ length: 16 }, () => 
-      chars[Math.floor(Math.random() * chars.length)]
-    ).join("") + "A1!";
+    const chars =
+      "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*";
+    const randomPassword =
+      Array.from({ length: 16 }, () =>
+        chars[Math.floor(Math.random() * chars.length)]
+      ).join("") + "A1!";
 
     const newuser = await serverUsers.create(
       ID.unique(),
@@ -47,41 +50,30 @@ export const createUser = async (user: CreateUserParams) => {
       user.name
     );
 
-    return parseStringify(newuser);
-  } catch (error: any) {
-    // If it's our custom USER_EXISTS error, re-throw it
-    if (error?.code === "USER_EXISTS") {
-      throw error;
-    }
-    
-    // If creation fails with 409, user already exists
-    if (error && (error?.code === 409 || error?.response?.code === 409)) {
+    return { status: "created", user: parseStringify(newuser) };
+  } catch (error: unknown) {
+    const err = error as { code?: number; response?: { code?: number } };
+    if (err?.code === 409 || err?.response?.code === 409) {
       try {
         const existingUsers = await serverUsers.list([
           Query.equal("email", [user.email]),
         ]);
-        
+
         if (existingUsers.users.length > 0) {
-          const userExistsError = new Error("User already exists");
-          (userExistsError as any).code = "USER_EXISTS";
-          (userExistsError as any).user = parseStringify(existingUsers.users[0]);
-          throw userExistsError;
+          return { status: "exists" };
         }
-      } catch (listError: any) {
-        if (listError?.code === "USER_EXISTS") {
-          throw listError;
-        }
+      } catch (listError) {
         console.error("Error fetching existing user:", listError);
       }
     }
     console.error("An error occurred while creating a new user:", error);
-    throw error;
+    return { status: "failed" };
   }
-};
-// get user by id
-export const getUserById = async (userId: string) => {
+}
+
+export async function getUserById(userId: string) {
   try {
-    const apiKey = process.env.API_KEY || process.env.APPWRITE_API_KEY || process.env.NEXT_PUBLIC_API_KEY;
+    const apiKey = process.env.API_KEY || process.env.APPWRITE_API_KEY;
     if (!apiKey) {
       console.warn("API_KEY is not configured. Returning fallback user.");
       return {
@@ -106,8 +98,9 @@ export const getUserById = async (userId: string) => {
       phone: "",
     };
   }
-};
-export const createPatient = async (patient: CreatePatientParams) => {
+}
+
+export async function createPatient(patient: CreatePatientParams) {
   try {
     const newPatient = await serverDatabases.createDocument(
       DATABASE_ID,
@@ -117,27 +110,27 @@ export const createPatient = async (patient: CreatePatientParams) => {
     );
 
     return parseStringify(newPatient);
-  }
-  catch (error) {
+  } catch (error) {
     console.error("An error occurred while creating a patient:", error);
   }
-};
-export const getPatient = async (userId: string) => {
+}
+
+export async function getPatient(userId: string) {
   try {
-    // Generate patientId from userId (same logic as in registerForm)
-    const patientId = Math.abs(userId.split('').reduce((acc, char) => {
-      return ((acc << 5) - acc) + char.charCodeAt(0);
-    }, 0));
-    
+    const patientId = Math.abs(
+      userId.split("").reduce((acc, char) => {
+        return (acc << 5) - acc + char.charCodeAt(0);
+      }, 0)
+    );
+
     const patient = await serverDatabases.listDocuments(
       DATABASE_ID,
       PATIENTS_TABLE_ID,
       [Query.equal("patientId", patientId)]
     );
     return parseStringify(patient.documents[0]);
-  }
-  catch (error) {
+  } catch (error) {
     console.error("An error occurred while fetching patient:", error);
     return null;
   }
-};
+}
