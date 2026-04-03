@@ -1,6 +1,37 @@
-import { Badge } from '@/components/badge';
-import { Cpu, Fingerprint, Pencil, Settings2, Sparkles, User, Zap, Stethoscope, Calendar, Activity, Heart, MessageCircle } from 'lucide-react';
-import Image from 'next/image';
+import type { Metadata } from "next";
+import Image from "next/image";
+import {
+  Activity,
+  Calendar,
+  Cpu,
+  Fingerprint,
+  Heart,
+  MessageCircle,
+  Pencil,
+  Settings2,
+  Sparkles,
+  Stethoscope,
+  User,
+  Zap,
+} from "lucide-react";
+import { Badge } from "@/components/badge";
+import { buildOpenGraph, getMetadataBase, siteConfig } from "@/lib/seo/site-config";
+
+const title = "خدماتنا الطبية";
+const description =
+  "خدمات TrueCare: استشارات، حجز مواعيد، متابعة صحية، ودعم للمرضى والأطباء في منصة واحدة.";
+
+export const metadata: Metadata = {
+  title,
+  description,
+  keywords: [...siteConfig.keywords, "خدمات طبية", "استشارة"],
+  openGraph: buildOpenGraph({
+    title: `${title} | ${siteConfig.name}`,
+    description,
+    url: new URL("/services", getMetadataBase()),
+  }),
+  alternates: { canonical: "/services" },
+};
 
 export function ServicesPage() {
     return (

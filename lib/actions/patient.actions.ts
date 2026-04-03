@@ -93,9 +93,12 @@ export const getUserById = async (userId: string) => {
     }
     const user = await serverUsers.get(userId);
     return parseStringify(user);
-  } catch (error: any) {
-    console.error("An error occurred while fetching user by ID:", error);
-    // Return a minimal user object to prevent page crash
+  } catch (error: unknown) {
+    const err = error as { code?: number; type?: string };
+    const notFound = err.code === 404 || err.type === "user_not_found";
+    if (!notFound) {
+      console.error("An error occurred while fetching user by ID:", error);
+    }
     return {
       $id: userId,
       name: "",

@@ -95,9 +95,21 @@ export const getRecentAppointments = async () => {
           try {
             const user = await serverUsers.get(appointment.userId);
             appointmentData.user = parseStringify(user);
-          } catch (error) {
-            console.error(`Error fetching user ${appointment.userId}:`, error);
-            appointmentData.user = { name: 'N/A', email: '', phone: '' };
+          } catch (error: unknown) {
+            const err = error as { code?: number; type?: string };
+            const missingUser =
+              err.code === 404 || err.type === "user_not_found";
+            if (!missingUser) {
+              console.error(
+                `Error fetching user ${appointment.userId}:`,
+                error
+              );
+            }
+            appointmentData.user = {
+              name: "N/A",
+              email: "",
+              phone: "",
+            };
           }
         }
         
