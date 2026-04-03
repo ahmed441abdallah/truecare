@@ -66,6 +66,18 @@ export const updateAppointmentStatus = async (
   }
 };
 export const getRecentAppointments = async () => {
+  if (!DATABASE_ID || !APPOINTMENTS_TABLE_ID) {
+    console.warn(
+      "Appwrite DATABASE_ID or APPOINTMENTS_TABLE_ID is not set; skipping appointments fetch."
+    );
+    return parseStringify({
+      totalCount: 0,
+      scheduledCount: 0,
+      pendingCount: 0,
+      cancelledCount: 0,
+      documents: [],
+    });
+  }
   try {
     const appointments = await serverDatabases.listDocuments(
       DATABASE_ID,
@@ -155,6 +167,12 @@ export const getRecentAppointments = async () => {
       "An error occurred while retrieving the recent appointments:",
       error
     );
+    return parseStringify({
+      totalCount: 0,
+      scheduledCount: 0,
+      pendingCount: 0,
+      cancelledCount: 0,
+      documents: [],
+    });
   }
-  
 };

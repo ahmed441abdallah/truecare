@@ -1,14 +1,52 @@
 import { Client, Account, Databases, Storage, Messaging } from "appwrite";
-import { Client as ServerClient, Users, Databases as ServerDatabases } from "node-appwrite";
+import {
+  Client as ServerClient,
+  Users,
+  Databases as ServerDatabases,
+} from "node-appwrite";
 
-export const ENDPOINT_URL = process.env.NEXT_PUBLIC_ENDPOINT_URL!;
-export const PROJECT_ID = process.env.NEXT_PUBLIC_PROJECT_ID!;
-export const DATABASE_ID = process.env.NEXT_PUBLIC_DATABASE_ID!;
-export const PATIENTS_TABLE_ID = process.env.NEXT_PUBLIC_PATIENTS_TABLE_ID!;
-export const DOCTORS_TABLE_ID = process.env.NEXT_PUBLIC_DOCTORS_TABLE_ID!;
-export const APPOINTMENTS_TABLE_ID =
-  process.env.NEXT_PUBLIC_APPOINTMENTS_TABLE_ID!;
-export const BUCKET_ID = process.env.NEXT_PUBLIC_BUCKET_ID!;
+function firstEnv(...keys: (string | undefined)[]): string {
+  for (const v of keys) {
+    const t = v?.trim();
+    if (t) return t;
+  }
+  return "";
+}
+
+/** Supports NEXT_PUBLIC_* (browser) and server-only names; never undefined (avoids SDK .startsWith crash). */
+const rawEndpoint = firstEnv(
+  process.env.NEXT_PUBLIC_ENDPOINT_URL,
+  process.env.ENDPOINT_URL
+);
+export const ENDPOINT_URL =
+  rawEndpoint.replace(/\/$/, "") || "https://cloud.appwrite.io/v1";
+
+const rawProject = firstEnv(
+  process.env.NEXT_PUBLIC_PROJECT_ID,
+  process.env.PROJECT_ID
+);
+export const PROJECT_ID = rawProject || "missing-project-configure-env";
+
+export const DATABASE_ID = firstEnv(
+  process.env.NEXT_PUBLIC_DATABASE_ID,
+  process.env.DATABASE_ID
+);
+export const PATIENTS_TABLE_ID = firstEnv(
+  process.env.NEXT_PUBLIC_PATIENTS_TABLE_ID,
+  process.env.PATIENTS_TABLE_ID
+);
+export const DOCTORS_TABLE_ID = firstEnv(
+  process.env.NEXT_PUBLIC_DOCTORS_TABLE_ID,
+  process.env.DOCTORS_TABLE_ID
+);
+export const APPOINTMENTS_TABLE_ID = firstEnv(
+  process.env.NEXT_PUBLIC_APPOINTMENTS_TABLE_ID,
+  process.env.APPOINTMENTS_TABLE_ID
+);
+export const BUCKET_ID = firstEnv(
+  process.env.NEXT_PUBLIC_BUCKET_ID,
+  process.env.BUCKET_ID
+);
 
 // Client SDK (for client-side)
 const client = new Client();
