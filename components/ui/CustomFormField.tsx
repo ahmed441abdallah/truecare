@@ -9,22 +9,23 @@ import {
 import "react-phone-number-input/style.css";
 import PhoneInput from "react-phone-number-input";
 import { Input } from "@/components/ui/input";
-import { Control, FieldValues } from "react-hook-form";
-interface CustomProps {
-  control: Control<FieldValues>;
-  name: string;
+import { Control, FieldPath, FieldValues } from "react-hook-form";
+
+interface CustomProps<T extends FieldValues> {
+  control: Control<T>;
+  name: FieldPath<T>;
   label?: string;
   feildType?: string;
   icon?: React.ReactNode;
 }
 
-const CustomFormField = ({
+function CustomFormField<T extends FieldValues>({
   control,
   name,
   label,
   feildType,
   icon,
-}: CustomProps) => {
+}: CustomProps<T>) {
   return (
     <FormField
       control={control}
@@ -55,6 +56,6 @@ const CustomFormField = ({
       )}
     />
   );
-};
+}
 
 export default CustomFormField;

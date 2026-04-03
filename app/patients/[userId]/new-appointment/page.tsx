@@ -33,7 +33,7 @@ function NewAppointmentPage () {
       y: 0,
       transition: {
         duration: 1.2,
-        ease: [0.4, 0, 0.2, 1],
+        ease: [0.4, 0, 0.2, 1] as const,
       },
     },
   };
@@ -45,7 +45,7 @@ function NewAppointmentPage () {
       x: 0,
       transition: {
         duration: 1.5,
-        ease: [0.4, 0, 0.2, 1],
+        ease: [0.4, 0, 0.2, 1] as const,
       },
     },
   };

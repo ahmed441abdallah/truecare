@@ -10,7 +10,7 @@ const serviceHours = [
   { day: "الأربعاء", time: "24 ساعة" },
   { day: "الخميس", time: "24 ساعة" },
 ];
-const ScheduleItem = ({ day, time }) => (
+const ScheduleItem = ({ day, time }: { day: string; time: string }) => (
   <div className="flex flex-col items-start p-2">
     {/* Icon */}
     <div
@@ -84,7 +84,15 @@ const FlowConnector: React.FC<FlowConnectorProps> = ({ isLast }) => {
   );
 };
 
-const StepCard = ({ number, title, description }) => (
+const StepCard = ({
+  number,
+  title,
+  description,
+}: {
+  number: string;
+  title: string;
+  description: string;
+}) => (
   <div className="flex flex-col items-center text-center max-w-[280px] p-4">
     {/* Step Icon (Circle with Number) */}
     <div

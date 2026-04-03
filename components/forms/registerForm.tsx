@@ -124,7 +124,6 @@ function RegisterForm({ user }: { user: User }) {
 
   return (
     <div className=" w-full sm:w-3/4">
-      {/* @ts-expect-error - shadcn Form component type inference issue */}
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
           <section className=" text-3xl font-bold text-slate-800">

@@ -35,7 +35,30 @@ declare interface RegisterUserParams extends CreateUserParams {
   privacyConsent: boolean;
 }
 
-declare type CreatePatientParams = RegisterUserParams;
+/** Payload sent to Appwrite when registering a patient (see registerForm). */
+declare type CreatePatientParams = {
+  patientId: number;
+  firstName: string;
+  lastName: string;
+  email: string;
+  phoneNumber: string;
+  birthDate: string;
+  gender: string;
+  address: string;
+  occupation: string;
+  emergenceContactName: string;
+  emergenceContactNumber: string;
+  primaryCarePhysician: string;
+  insuranceProvider: string;
+  insurancePolicyNumber: string;
+  allergies?: string;
+  currentMedications?: string;
+  familyMedicalHistory?: string;
+  pastMedicalHistory?: string;
+  treatmentConsent: boolean;
+  disclosureConsent: boolean;
+  privacyConsent: boolean;
+};
 
 declare type CreateAppointmentParams = {
   userId: string;

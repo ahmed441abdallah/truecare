@@ -207,7 +207,9 @@ const formSchema = z.object({
                     >
                       <DatePicker
                         selected={field.value ? new Date(field.value) : null}
-                        onChange={(date) => field.onChange(date)}
+                        onChange={(date: Date | null) => {
+                          if (date) field.onChange(date);
+                        }}
                         showTimeSelect
                         timeFormat="HH:mm"
                         timeIntervals={15}

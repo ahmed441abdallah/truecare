@@ -1,5 +1,5 @@
 'use client'
-import { motion } from "framer-motion";
+import { motion } from "motion/react";
 import { Quote } from "lucide-react";
 
 interface Testimonial {
@@ -38,7 +38,7 @@ export const TestimonialSection = ({
       y: 0,
       transition: {
         duration: 0.5,
-        ease: "easeOut",
+        ease: [0.4, 0, 0.2, 1] as const,
       },
     },
   };
