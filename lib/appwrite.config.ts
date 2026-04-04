@@ -62,13 +62,18 @@ const serverClient = new ServerClient()
   .setEndpoint(ENDPOINT_URL)
   .setProject(PROJECT_ID);
 
-// Server-only key — never use NEXT_PUBLIC_* for Users / admin APIs (CORS + security).
-const serverApiKey = process.env.API_KEY || process.env.APPWRITE_API_KEY;
+// Server-only: prefer API_KEY / APPWRITE_API_KEY. In development only, fall back to NEXT_PUBLIC_API_KEY if set (not recommended for production).
+const serverApiKey =
+  process.env.API_KEY ||
+  process.env.APPWRITE_API_KEY ||
+  (process.env.NODE_ENV === "development"
+    ? process.env.NEXT_PUBLIC_API_KEY
+    : undefined);
 if (serverApiKey) {
   serverClient.setKey(serverApiKey);
 } else {
   console.warn(
-    "API_KEY or APPWRITE_API_KEY is not set. Server actions that use Appwrite admin APIs will fail."
+    "API_KEY or APPWRITE_API_KEY is not set. Server actions that use Appwrite admin APIs will fail. Add API_KEY in .env.local and in Vercel (same value as your Appwrite API key)."
   );
 }
 

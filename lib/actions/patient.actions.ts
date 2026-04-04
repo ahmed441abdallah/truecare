@@ -5,10 +5,15 @@ import { ID } from "node-appwrite";
 import { PATIENTS_TABLE_ID, DATABASE_ID } from "@/lib/appwrite.config";
 import { parseStringify } from "../utils";
 import { Query } from "node-appwrite";
+import {
+  isLikelyNetworkError,
+  withNetworkRetries,
+} from "@/lib/utils/network";
 
 export type CreateUserOutcome =
   | { status: "created"; user: User }
   | { status: "exists" }
+  | { status: "network" }
   | { status: "failed" };
 
 // CREATE APPWRITE USER (server-only — never call Users API from the browser)
@@ -16,23 +21,34 @@ export async function createUser(
   user: CreateUserParams
 ): Promise<CreateUserOutcome> {
   try {
-    const apiKey = process.env.API_KEY || process.env.APPWRITE_API_KEY;
+    const apiKey =
+      process.env.API_KEY ||
+      process.env.APPWRITE_API_KEY ||
+      (process.env.NODE_ENV === "development"
+        ? process.env.NEXT_PUBLIC_API_KEY
+        : undefined);
     if (!apiKey) {
-      console.error("API_KEY / APPWRITE_API_KEY is not configured on the server.");
+      console.error(
+        "API_KEY / APPWRITE_API_KEY is not configured on the server."
+      );
       return { status: "failed" };
     }
 
+    let existingUsers;
     try {
-      const existingUsers = await serverUsers.list([
-        Query.equal("email", [user.email]),
-      ]);
-
-      if (existingUsers.users.length > 0) {
-        return { status: "exists" };
-      }
+      existingUsers = await withNetworkRetries(() =>
+        serverUsers.list([Query.equal("email", [user.email])])
+      );
     } catch (listError: unknown) {
-      // If listing fails, still attempt create (same as previous behavior)
       console.error("Error listing users by email:", listError);
+      if (isLikelyNetworkError(listError)) {
+        return { status: "network" };
+      }
+      return { status: "failed" };
+    }
+
+    if (existingUsers.users.length > 0) {
+      return { status: "exists" };
     }
 
     const chars =
@@ -42,29 +58,44 @@ export async function createUser(
         chars[Math.floor(Math.random() * chars.length)]
       ).join("") + "A1!";
 
-    const newuser = await serverUsers.create(
-      ID.unique(),
-      user.email,
-      user.phone,
-      randomPassword,
-      user.name
-    );
+    try {
+      const newuser = await withNetworkRetries(() =>
+        serverUsers.create(
+          ID.unique(),
+          user.email,
+          user.phone,
+          randomPassword,
+          user.name
+        )
+      );
 
-    return { status: "created", user: parseStringify(newuser) };
+      return { status: "created", user: parseStringify(newuser) };
+    } catch (createError: unknown) {
+      if (isLikelyNetworkError(createError)) {
+        return { status: "network" };
+      }
+      throw createError;
+    }
   } catch (error: unknown) {
     const err = error as { code?: number; response?: { code?: number } };
     if (err?.code === 409 || err?.response?.code === 409) {
       try {
-        const existingUsers = await serverUsers.list([
-          Query.equal("email", [user.email]),
-        ]);
+        const existingUsers = await withNetworkRetries(() =>
+          serverUsers.list([Query.equal("email", [user.email])])
+        );
 
         if (existingUsers.users.length > 0) {
           return { status: "exists" };
         }
       } catch (listError) {
         console.error("Error fetching existing user:", listError);
+        if (isLikelyNetworkError(listError)) {
+          return { status: "network" };
+        }
       }
+    }
+    if (isLikelyNetworkError(error)) {
+      return { status: "network" };
     }
     console.error("An error occurred while creating a new user:", error);
     return { status: "failed" };
@@ -73,7 +104,12 @@ export async function createUser(
 
 export async function getUserById(userId: string) {
   try {
-    const apiKey = process.env.API_KEY || process.env.APPWRITE_API_KEY;
+    const apiKey =
+      process.env.API_KEY ||
+      process.env.APPWRITE_API_KEY ||
+      (process.env.NODE_ENV === "development"
+        ? process.env.NEXT_PUBLIC_API_KEY
+        : undefined);
     if (!apiKey) {
       console.warn("API_KEY is not configured. Returning fallback user.");
       return {

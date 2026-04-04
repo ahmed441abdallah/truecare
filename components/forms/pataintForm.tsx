@@ -38,6 +38,10 @@ export default function PataintForm() {
         router.push(`/patients/${outcome.user.$id}/register`);
       } else if (outcome.status === "exists") {
         toast.error("المستخدم موجود بالفعل بهذا العنوان الإلكتروني");
+      } else if (outcome.status === "network") {
+        toast.error(
+          "تعذر الاتصال بالخادم (انتهت المهلة). تحقق من الإنترنت أو أعد المحاولة."
+        );
       } else {
         toast.error("فشل إنشاء المستخدم. يرجى المحاولة مرة أخرى.");
       }

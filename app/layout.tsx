@@ -60,8 +60,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang={siteConfig.language} dir="rtl">
-      <body>
+    <html lang={siteConfig.language} dir="rtl" suppressHydrationWarning>
+      <body suppressHydrationWarning>
         <OrganizationJsonLd />
         <WebSiteJsonLd />
         <ConditionalLayout>{children}</ConditionalLayout>
